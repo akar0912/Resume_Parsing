@@ -9,8 +9,8 @@ from spacy.matcher import Matcher
 nlp=spacy.load('en_core_web_sm')
 matcher=Matcher(nlp.vocab)
 import PyPDF2
-from pywintypes import com_error
-import win32com.client as win32
+#from pywintypes import com_error
+#import win32com.client as win32
 import io
 import docx2txt
 
@@ -20,7 +20,15 @@ from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
-import spacy
+#import spacy
+
+import sys
+import os
+import numpy as np
+#import comtypes.client
+
+
+
 
 def extract_email_addresses(text):
     r = re.compile(r'[\w\.-]+@[\w\.-]+')
@@ -39,18 +47,29 @@ def extract_mobile_number(text):
             mono.append(mno[i])         
     return mono
 
+def getKeysByValue(dictionary, value):
+    keys = list(dictionary.keys())
+    values = list(dictionary.values())
+    for x in range(len(values)):
+        for y in values[x]:
+            if y == value:
+                return keys[x]
+
+
 
 def extract_skill_set(text):
-    with open("C:\\Users\\PritamDevadattaJena\\Desktop\\alisha\\skills.txt","r") as skill:
-        skill_set = skill.read().split("\n")    
+    # with open("C:\\Users\\PritamDevadattaJena\\Desktop\\alisha\\skills.txt","r") as skill:
+    #     skill_set = skill.read().split("\n")
+    all_skills = {'Excel': ["Excel", "Advance Excel", "MS Excel", "Report", "Charts"], "VBA" : ["Visual Basic", "Visual Basic Application", "Macro", "Automation"], "Database": ["MS access", "Access Database", "SQL Server", "SQL", "SSIS"], "Power BI":["Power BI", "Power Query", "Power Pivot"] , "Qlikview":["Qlikview", "Set analysis"], "QlikSense":["QlikSense"], "Analytics":["Analytics", "Machine Learning", "Deep Learning", "AI", "Artificial Intelligence", "ML", "SVM", "SAS", "R"], "Sharepoint":["Sharepoint"]} 
+    skill_set = list(np.concatenate(list(all_skills.values()), axis=0 ))
     f = []
     for s in skill_set:
         #if re.search(s, text, re.I):
-        if s in text:
+        if s.lower() in text.lower():
             if len(s)>2:
-                f.append(s)
+                f.append(getKeysByValue(all_skills,s))
     
-    return f
+    return list(set(f))
 
 
 def generate_ngrams(filename, n):
@@ -163,9 +182,11 @@ def extract_names(document):
         span=nlp_text[start:end]
         return span.text
 #------------------------------------------------------------------------------#
-path = "C:\\Users\\PritamDevadattaJena\\Desktop\\alisha\\resumes\\"
+path = "/Users/praagraw/Downloads/Alisha/"
 data = []
 #data = pd.DataFrame(columns = ["FileName","FileContents","Name","Email Address","Contact Number","Experience","rank"])
+
+
 
 ####IMPORTING PDF ONLY
 for filename in os.listdir(path):
@@ -185,9 +206,7 @@ for filename in os.listdir(path):
         skills = extract_skill_set(res)
         exp= exper(res)
         python_count,excel_count,vba_count,sql_count = count_skills(res)
-        data.append({"FileName":filename, "FileContents":res, "Name":name, "Email Address":email,"Skills":skills,
-                "Contact Number":cno,"Experience": exp,"python_count":python_count,"excel_count":excel_count,"vba_count":vba_count,"sql_count":sql_count,"rank":count},ignore_index=True)
-        
+        data.append({"FileName":filename, "FileContents":res, "Name":name, "Email Address":email,"Skills":skills,"Contact Number":cno,"Experience": exp,"python_count":python_count,"excel_count":excel_count,"vba_count":vba_count,"sql_count":sql_count})
         df = pd.DataFrame(data, columns = ["FileName","FileContents","Name","Email Address","Contact Number","Skills","Experience","python_count","excel_count","vba_count","sql_count"])    
-        df.to_csv("resumes_filter8.csv", index=False)
+        df.to_csv("resumes_filter10.csv", index=False)
     
