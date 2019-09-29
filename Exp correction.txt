@@ -1,0 +1,35 @@
+def exper(fullText):
+    mi=fullText.lower()
+    #print(mi)
+    h=mi.replace("_"," ")
+    h=h.replace("-"," ")
+    h=h.replace(","," ")
+    h=h.replace("("," ")
+    h=h.replace(")"," ")
+    h=h.replace(".docx"," ")
+    h=h.replace(".pdf"," ")
+    h=h.split()              #look at h only years get it
+    if 'years' in h and 'months' in h:
+        if h[h.index('years')-1].isdigit() ==True:
+            d=h[h.index('years')-1] + " " + h[h.index('years')]+ " " +h[h.index('months')-1] + " " +h[h.index('months')]
+        else:
+            if int(h[h.index('months')-1]) >= 12:
+                d = str(int(h[h.index('months')-1])/12) + " " + h[h.index('years')]
+                print('yay!')
+    #elif 'year' in h:
+        #d=h[h.index('year')-1] + " " + h[h.index('year')]
+    elif 'years' in h:
+        d=h[h.index('years')-1] + " " + h[h.index('years')]
+    elif 'months' in h:
+        if int(h[h.index('months')-1]) >= 12:
+            d = str(int(h[h.index('months')-1])/12) + " " + h[h.index('years')]
+            #print('yay!')
+        else:
+            d =h[h.index('months')-1] + " " + h[h.index('months')]
+    #elif 'month' in h:
+     #   d=h[h.index('month')-1] + " " + h[h.index('month')]
+    elif re.search('no experience',str(h),re.M|re.I) :
+        d='No Experience'
+    else:
+        d=generate_ngrams(fullText, 2)  
+    return d   
