@@ -1,8 +1,11 @@
+
+install.packages("geosphere")
 library(geosphere)
+install.packages("bda")
 library(bda)
 
 #importing the data#
-data<- read.csv('c:/Users/DELL/Desktop/Lat_data.csv')
+data<- read.csv('C:/Users/LENOVO/Downloads/Data_geo.csv')
 get_geo_distance = function(long1, lat1, long2, lat2, units = "miles") {
   loadNamespace("purrr")
   loadNamespace("geosphere")
@@ -25,17 +28,17 @@ get_geo_distance = function(long1, lat1, long2, lat2, units = "miles") {
 
 
 #use this loop to get individaul distance 
-for i (1:data$lat):
-  for j in (1:data$long)
-new_data= get_geo_distance((lat,long,i,j,unit='km'))
+for (i in 1:data$lat) {
+for (j in 1:data$long){
+new_data= get_geo_distance(lat,long,i,j,unit='km')}}
 
 
 #biing the data
 
-breaks <- c(0,1,2,3,4,5,6)
-# specify interval/bin labels
-tags <- c("[0-1)","[1-2)", "[2-3)", "[3-4)", "[4-5)", "[5-6)")
-# bucketing values into bins
+  breaks <- c(0,1,2,3,4,5,6)
+  # specify interval/bin labels
+  tags <- c("[0-1)","[1-2)", "[2-3)", "[3-4)", "[4-5)", "[5-6)")
+  # bucketing values into bins
 
 data$bin_tags <- cut(data$new_long, 
                   breaks=breaks, 
