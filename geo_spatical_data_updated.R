@@ -3,7 +3,7 @@ library(bda)
 library(Imap)
 library(dplyr)
 #importing the data#
-data<- read.csv('c:/Users/DELL/Desktop/Lat_data.csv')
+data<- read.csv('C:/Users/LENOVO/Downloads/Data_geo.csv')
 
 
 dists_list <- list()
@@ -26,9 +26,10 @@ for (i in 1:nrow(data)) {
 
 
 # unlist results and convert to a "named" matrix format
-dist_mat <- sapply(dist_list, unlist)
+dist_mat <- sapply(dists_list, unlist)
 #mapping the result with the main data
 data$new_dist<-dist_mat
+write.csv(data,'C:/Users/LENOVO/Downloads/data_new',sep=',')
 
 
 #biing the data
